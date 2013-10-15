@@ -5,7 +5,7 @@ require 'xmpp4r/muc'
 class EndoBot
   
     include Jabber
-    Jabber::debug = true
+    #Jabber::debug = true
     attr_accessor :jid, :password, :channel, :file
 
     def initialize

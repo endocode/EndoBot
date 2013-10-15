@@ -17,6 +17,5 @@ tmp
 _yardoc
 doc/
 
-logs/
 start_bot.sh
 mail_reports.sh
