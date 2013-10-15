@@ -1,68 +1,40 @@
 require 'rubygems'
 require 'xmpp4r'
-require 'xmpp4r/muc'
+require 'xmpp4r/muc/helper/simplemucclient'
+require_relative 'Report'
 
 class EndoBot
-  
-    include Jabber
-    #Jabber::debug = true
-    attr_accessor :jid, :password, :channel, :file
 
-    def initialize
-        self.jid = ARGV[0]
-        self.password = ARGV[1]
-        self.channel = ARGV[2]
-        self.file = ARGV[3]
-        #@jid = jid
-        #@jpassword = jpassword
-        @client = Client.new(JID::new(jid))
-        @client.allow_tls = false
-        @client.connect
-        @client.auth(password)
-        @client.send(Presence.new.set_type(:available))
+  def initialize
+    @reports = []
+  end
+
+  def create_reports(date, name, message, file)
+    for current in @reports
+      if current.name == name and current.date == date
+        current.set_message_for_user(message, name)
+        @contains = true
+      else
+        @contains = false
+      end
     end
 
-    def read_messages
-        time = Time.now.asctime
-        @room = Jabber::MUC::MUCClient.new(@client)
-        @room.join(Jabber::JID.new(channel + @client.jid.node))
-
-        loop do
-            @room.add_message_callback do |msg|
-              File.open(file, 'a+') do |f2|
-                from = msg.from.to_s
-                from.slice! channel
-                f2.puts "#{time.to_s}, #{from}: #{msg.body}"
-              end  
-            end
-            add_join_callback do |msg|
-              #puts msg
-            end
-        end
+    if @contains == false or @reports.length == 0
+      report = Report.new(date, name)
+      report.set_message(message)
+      @reports << report
     end
 
-    def send_message to,message
-        msg = Message::new(to,message)
-        msg.type = :chat
-        @client.send(msg)
+    for current in @reports
+      current.set_done()
+      if current.done == true and current.saved == false
+        current.write_to_file(file)
+        return true
+      end
     end
-    
-    def write_to_file content
-      File.open(file, 'a+') do |f2|  
-        f2.puts content
-      end  
-    end
+  end
+
+  def get_reports_length()
+    return @reports.length
+  end
 end
-
-bot = EndoBot.new()
-
-t1 = Thread.new do
-    bot.read_messages
-end
-
-# no need for second thread at the moment
-#t2 = Thread.new do
-    #bot.send_message('sebastian@endocode.com',Random.new.rand(100).to_s)
-#end
-
-Thread.list.each { |t| t.join if t != Thread.main }
