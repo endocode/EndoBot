@@ -12,7 +12,7 @@ We use a daily scrum report in the chat that looks like this:
     5. Sparetime
     
 
-Run it via "ruby EndoBot.rb <jabberId> <password> <channel> <outputfile>"
+Run it via "ruby EndoBot.rb jabberId password channel outputfile"
 
 ToDo: 
 
