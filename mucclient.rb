@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'xmpp4r'
 require 'xmpp4r/muc/helper/simplemucclient'
-require_relative 'EndoBot'
+require_relative 'endobot'
 
 if ARGV.size != 4
   puts "Usage: #{$0} <jid> <password> <room@conference/nick> <outputfile>"

@@ -1,7 +1,5 @@
 require 'rubygems'
-require 'xmpp4r'
-require 'xmpp4r/muc/helper/simplemucclient'
-require_relative 'Report'
+require_relative'report'
 
 class EndoBot
 

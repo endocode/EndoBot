@@ -1,2 +1,2 @@
-require_relative '../Report'
-require_relative '../EndoBot'
+require_relative '../report'
+require_relative '../endobot'
