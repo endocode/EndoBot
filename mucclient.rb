@@ -40,9 +40,8 @@ mainthread = Thread.current
 }
 
 @room.on_message { |time,nick,text|
-  time = "#{Time.new.year}-#{Time.new.month}-#{Time.new.day}"
-  puts "#{time.to_s}, #{nick}, #{text}"
-  if (@bot.create_reports(time.to_s, nick, text, @file)) == true
+  puts "#{Date.today}, #{nick}, #{text}"
+  if (@bot.create_reports(Date.today, nick, text, @file)) == true
     @room.say("Thanks #{nick} - Your report is saved")
   end
 
@@ -52,6 +51,13 @@ mainthread = Thread.current
       puts "exiting"
       @room.exit "Exiting on behalf of #{nick}"
       mainthread.wakeup
+    end
+  end
+
+  # Bot: reports
+  if text.strip =~ /^(.+?): reports$/
+    if $1.downcase == @room.jid.resource.downcase
+      @room.say("Reports for today: #{@bot.get_todays_reports(Date.today)}")
     end
   end
 }

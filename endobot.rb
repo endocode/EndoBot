@@ -35,4 +35,14 @@ class EndoBot
   def get_reports_length()
     return @reports.length
   end
+
+  def get_todays_reports(date)
+    counter = 0
+    for current in @reports
+      if current.date == date and current.done == true
+        counter = counter + 1
+      end
+    end
+    return counter
+  end
 end
