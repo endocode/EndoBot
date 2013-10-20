@@ -8,6 +8,7 @@ if ARGV.size != 4
   exit
 end
 
+include Jabber
 
 @jid = ARGV[0]
 @password = ARGV[1]
@@ -22,6 +23,7 @@ client = Jabber::Client.new(Jabber::JID.new(ARGV[0]))
 client.allow_tls = false
 client.connect
 client.auth(@password)
+client.send(Presence.new.set_type(:available))
 
 mainthread = Thread.current
 
