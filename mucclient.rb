@@ -59,7 +59,7 @@ mainthread = Thread.current
   # Bot: reports
   if text.strip =~ /^(.+?): reports$/
     if $1.downcase == @room.jid.resource.downcase
-      @room.say("Reports for today: #{@bot.get_todays_reports(Date.today)}")
+      @room.say("Reports for Today: #{@bot.get_todays_reports(Date.today)}\nReports already saved: #{@bot.get_users_reports(Date.today)}")
     end
   end
 }

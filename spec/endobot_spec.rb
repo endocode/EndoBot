@@ -96,5 +96,14 @@ describe EndoBot do
 
       File.delete("logs/test_reports.log")
     end
+    it "gets a list of users that entered reports for today" do
+      @bot.create_reports(@today, @user, @message1, @file).should_not == true
+      @bot.create_reports(@today, @user, @message2, @file).should_not == true
+      @bot.create_reports(@today, @user, @message3, @file).should_not == true
+      @bot.create_reports(@today, @user, @message4, @file).should_not == true
+      @bot.create_reports(@today, @user, @message5, @file).should == true
+      @bot.get_todays_reports(@today).should eql 1
+      @bot.get_users_reports(@today).should start_with @user
+    end
   end
 end

@@ -45,4 +45,13 @@ class EndoBot
     end
     return counter
   end
+  def get_users_reports(date)
+    result = ""
+    for current in @reports
+      if current.date == date and current.done == true
+        result = "#{result}#{current.name} "
+      end
+    end
+    return result
+  end
 end
