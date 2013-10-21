@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'xmpp4r'
 require 'xmpp4r/muc/helper/simplemucclient'
+require 'rufus-scheduler'
 require_relative 'endobot'
 
 if ARGV.size != 4
@@ -17,6 +18,8 @@ include Jabber
 @bot = EndoBot.new()
 @reports = []
 @room
+@scheduler = Rufus::Scheduler.new
+@users = []
 
 #Jabber::debug = true
 client = Jabber::Client.new(Jabber::JID.new(ARGV[0]))
@@ -34,17 +37,19 @@ mainthread = Thread.current
 @room.on_join { |time,nick|
   puts "#{nick} has joined!"
   puts "Users: " + @room.roster.keys.join(', ')
-  #room.say("Hello #{nick}")
+  @users << nick
 }
 
 @room.on_leave { |time,nick|
   puts "#{nick} has left!"
+  @users.delete(nick)
 }
 
 @room.on_message { |time,nick,text|
   puts "#{Date.today}, #{nick}, #{text}"
   if (@bot.create_reports(Date.today, nick, text, @file)) == true
     @room.say("Thanks #{nick} - Your report is saved")
+    bot_reports
   end
 
   # Bot: exit please
@@ -59,7 +64,7 @@ mainthread = Thread.current
   # Bot: reports
   if text.strip =~ /^(.+?): reports$/
     if $1.downcase == @room.jid.resource.downcase
-      @room.say("Reports for Today: #{@bot.get_todays_reports(Date.today)}\nReports already saved: #{@bot.get_users_reports(Date.today)}")
+      bot_reports
     end
   end
 }
@@ -69,6 +74,34 @@ mainthread = Thread.current
 }
 
 @room.join(ARGV[2])
+
+def bot_reports
+  if @bot.get_users_reports(Date.today).empty?
+    @room.say("no Reports yet :(")
+  else
+    saved_reports = "Reports saved: #{@bot.get_users_reports(Date.today)}"
+    counter = 0
+
+    for current in @users
+      puts @bot.user_has_report?(current)
+      if @bot.user_has_report?(current) == false
+        missing_reports = "#{missing_reports}#{current} "
+        counter = counter + 1
+      end
+    end
+    if counter > 0
+      @room.say("#{saved_reports}\nReports missing: #{missing_reports}")
+    else
+      @room.say("Everybody entered a report - thanks!")
+    end
+  end
+end
+
+@scheduler.cron '0 12 * * *' do
+  bot_reports
+end
+
+@scheduler.join
 
 Thread.stop
 client.close
