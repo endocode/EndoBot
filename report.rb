@@ -60,6 +60,7 @@ class Report
       f.puts "Impediments: #{self.impediments}"
       f.puts "Help needed: #{self.help}"
       f.puts "Sparetime: #{self.sparetime}"
+      f.puts ""
     end  
     @saved = true
   end
