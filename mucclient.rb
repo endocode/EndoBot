@@ -49,7 +49,7 @@ mainthread = Thread.current
   puts "#{Date.today}, #{nick}, #{text}"
   if (@bot.create_reports(Date.today, nick, text, @file)) == true
     @room.say("Thanks #{nick} - Your report is saved")
-    bot_reports
+    bot_reports_only_missing
   end
 
   # Bot: exit please
@@ -82,6 +82,26 @@ def bot_reports
     saved_reports = "Reports saved: #{@bot.get_users_reports(Date.today)}"
     counter = 0
 
+    for current in @users
+      puts @bot.user_has_report?(current)
+      if @bot.user_has_report?(current) == false
+        missing_reports = "#{missing_reports}#{current} "
+        counter = counter + 1
+      end
+    end
+    if counter > 0
+      @room.say("#{saved_reports}\nReports missing: #{missing_reports}")
+    else
+      @room.say("Everybody entered a report - thanks!")
+    end
+  end
+end
+
+def bot_reports_only_missing
+  if @bot.get_users_reports(Date.today).empty?
+    @room.say("no Reports yet :(")
+  else
+    counter = 0
     for current in @users
       puts @bot.user_has_report?(current)
       if @bot.user_has_report?(current) == false
