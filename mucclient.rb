@@ -81,9 +81,7 @@ def bot_reports
   else
     saved_reports = "Reports saved: #{@bot.get_users_reports(Date.today)}"
     counter = 0
-
     for current in @users
-      puts @bot.user_has_report?(current)
       if @bot.user_has_report?(current) == false
         missing_reports = "#{missing_reports}#{current} "
         counter = counter + 1
@@ -103,14 +101,13 @@ def bot_reports_only_missing
   else
     counter = 0
     for current in @users
-      puts @bot.user_has_report?(current)
       if @bot.user_has_report?(current) == false
         missing_reports = "#{missing_reports}#{current} "
         counter = counter + 1
       end
     end
     if counter > 0
-      @room.say("#{saved_reports}\nReports missing: #{missing_reports}")
+      @room.say("Reports missing: #{missing_reports}")
     else
       @room.say("Everybody entered a report - thanks!")
     end
