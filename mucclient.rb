@@ -22,15 +22,15 @@ include Jabber
 @scheduler = Rufus::Scheduler.new
 
 #Jabber::debug = true
-client = Jabber::Client.new(Jabber::JID.new(ARGV[0]))
-client.allow_tls = false
-client.connect
-client.auth(@password)
-client.send(Presence.new.set_type(:available))
+@client = Jabber::Client.new(Jabber::JID.new(ARGV[0]))
+@client.allow_tls = false
+@client.connect
+@client.auth(@password)
+@client.send(Presence.new.set_type(:available))
 
 mainthread = Thread.current
 
-@room = Jabber::MUC::SimpleMUCClient.new(client)
+@room = Jabber::MUC::SimpleMUCClient.new(@client)
 
 # SimpleMUCClient callback-blocks
 
@@ -114,11 +114,19 @@ def bot_reports_only_missing
   end
 end
 
+def send_messages_to_all
+  for current in @users
+    if @bot.user_has_report?(current) == false
+      @client.send Message::new("#{current}@#{Jabber::JID.new(ARGV[0]).domain}","Please submit your daily report.").set_type(:chat).set_id('1')
+    end
+  end
+end
+
 @scheduler.cron '0 12 * * *' do
-  bot_reports
+  send_messages_to_all
 end
 
 @scheduler.join
 
 Thread.stop
-client.close
+@client.close
