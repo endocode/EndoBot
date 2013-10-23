@@ -4,8 +4,8 @@ require 'xmpp4r/muc/helper/simplemucclient'
 require 'rufus-scheduler'
 require_relative 'endobot'
 
-if ARGV.size != 4
-  puts "Usage: #{$0} <jid> <password> <room@conference/nick> <outputfile>"
+if ARGV.size != 5
+  puts "Usage: #{$0} <jid> <password> <room@conference/nick> <outputfile> <user1,user2,...>"
   exit
 end
 
@@ -15,11 +15,11 @@ include Jabber
 @password = ARGV[1]
 @channel = ARGV[2]
 @file = ARGV[3]
+@users = ARGV[4].split(",")
 @bot = EndoBot.new()
 @reports = []
 @room
 @scheduler = Rufus::Scheduler.new
-@users = []
 
 #Jabber::debug = true
 client = Jabber::Client.new(Jabber::JID.new(ARGV[0]))
@@ -37,12 +37,12 @@ mainthread = Thread.current
 @room.on_join { |time,nick|
   puts "#{nick} has joined!"
   puts "Users: " + @room.roster.keys.join(', ')
-  @users << nick
+  # @users << nick
 }
 
 @room.on_leave { |time,nick|
   puts "#{nick} has left!"
-  @users.delete(nick)
+  # @users.delete(nick)
 }
 
 @room.on_message { |time,nick,text|
