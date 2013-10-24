@@ -64,4 +64,15 @@ class EndoBot
     end
     return result
   end
+  def clear_reports()
+    ready_to_clear = false
+    for current in @reports
+      if current.saved == true
+        ready_to_clear = true
+      end
+    end
+    if ready_to_clear == true
+      @reports = []
+    end
+  end
 end

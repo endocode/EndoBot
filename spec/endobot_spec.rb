@@ -120,5 +120,18 @@ describe EndoBot do
       @bot.user_has_report?(@user2).should == false
       File.delete("logs/test_reports.log")
     end
+    it "returns true if a user already entered a report" do
+      @bot.create_reports(@today, @user, @message1, @file).should_not == true
+      @bot.create_reports(@today, @user, @message2, @file).should_not == true
+      @bot.create_reports(@today, @user, @message3, @file).should_not == true
+      @bot.create_reports(@today, @user, @message4, @file).should_not == true
+      @bot.create_reports(@today, @user, @message5, @file).should == true
+      @bot.get_todays_reports(@today).should eql 1
+      @bot.clear_reports()
+      @bot.get_todays_reports(@today).should eql 0
+      @bot.user_has_report?(@user).should eql false
+      @bot.user_has_report?(@user2).should eql false
+      File.delete("logs/test_reports.log")
+    end
   end
 end
