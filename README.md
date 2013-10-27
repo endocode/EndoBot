@@ -1,7 +1,7 @@
 EndoBot
 =======
 
-<img src=https://api.travis-ci.org/sebastian-su/EndoBot.png />
+<img src=https://api.travis-ci.org/endocode/EndoBot.png />
 
 The EndoBot is a simple jabber chat listener written in Ruby.
 It listens to the specified channel and writes all the messages in the output file.
