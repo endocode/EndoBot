@@ -32,7 +32,7 @@ class EndoBot
     end
   end
 
-  def get_reports_length()
+  def get_reports_length
     return @reports.length
   end
 
@@ -64,15 +64,8 @@ class EndoBot
     end
     return result
   end
-  def clear_reports()
-    ready_to_clear = false
-    for current in @reports
-      if current.saved == true
-        ready_to_clear = true
-      end
-    end
-    if ready_to_clear == true
-      @reports = []
-    end
+
+  def clear_reports
+    @reports = []
   end
 end

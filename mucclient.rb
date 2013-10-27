@@ -126,6 +126,10 @@ end
   send_messages_to_all
 end
 
+@scheduler.cron '0 22 * * *' do
+  @bot.clear_reports
+end
+
 @scheduler.join
 
 Thread.stop
