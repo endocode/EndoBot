@@ -122,7 +122,7 @@ def send_messages_to_all
   end
 end
 
-@scheduler.cron '0 12 * * *' do
+@scheduler.cron '0 12 * * 1-5' do
   send_messages_to_all
 end
 
