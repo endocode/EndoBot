@@ -9,7 +9,6 @@ class Report
   end
   
   def set_message(message)
-    #puts self.yesterday
     if message.start_with? "1." or message.start_with? "Yesterday:"
       message.slice! "1. "
       @yesterday = message

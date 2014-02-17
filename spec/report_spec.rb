@@ -36,26 +36,26 @@ describe Report do
         @report.sparetime.should eql "never"
       end
   end
-  
+
   describe "#correct_user" do
     it "checks if this is the user's report" do
       @report.correct_user("user").should eql true
     end
   end
-  
+
   describe "#set_message_for_user" do
     it "sets the message if its the user's report" do
       @report.set_message_for_user("2. will do something", "user")
       @report.today.should eql "will do something"
     end
   end
-  
+
   describe "#print_report" do
     it "prints the report to the console" do
-      #@report.print_report
+      @report.print_report
     end
   end
-  
+
   describe "create reports for different users" do
     it "creates 2 reports" do
       @report1 = Report.new("today", "user1")
@@ -69,9 +69,5 @@ describe Report do
       
       @reports.length.should eql 2
     end
-    
-    
-    
   end
-
 end
