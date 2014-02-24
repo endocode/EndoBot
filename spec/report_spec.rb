@@ -10,30 +10,22 @@ describe Report do
         @report.set_message("1. did something")
         @report.set_message("2. will do something")
         @report.set_message("3. nope")
-        @report.set_message("4. maybe")
-        @report.set_message("5. never")
         
         @report.date.should eql "today"
-        @report.yesterday.should eql "did something"
-        @report.today.should eql "will do something"
-        @report.impediments.should eql "nope"
-        @report.help.should eql "maybe"
-        @report.sparetime.should eql "never"
+        @report.client.should eql "did something"
+        @report.endocode.should eql "will do something"
+        @report.help.should eql "nope"
       end
       
       it "gets the messages in the wrong order and sets them inside of the report" do
         @report.set_message("2. will do something")
-        @report.set_message("5. never")
         @report.set_message("1. did something")
         @report.set_message("3. nope")
-        @report.set_message("4. maybe")
         
         @report.date.should eql "today"
-        @report.yesterday.should eql "did something"
-        @report.today.should eql "will do something"
-        @report.impediments.should eql "nope"
-        @report.help.should eql "maybe"
-        @report.sparetime.should eql "never"
+        @report.client.should eql "did something"
+        @report.endocode.should eql "will do something"
+        @report.help.should eql "nope"
       end
   end
 
@@ -46,7 +38,7 @@ describe Report do
   describe "#set_message_for_user" do
     it "sets the message if its the user's report" do
       @report.set_message_for_user("2. will do something", "user")
-      @report.today.should eql "will do something"
+      @report.endocode.should eql "will do something"
     end
   end
 

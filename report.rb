@@ -1,6 +1,7 @@
 class Report
   attr_accessor :date, :name
-  attr_reader :yesterday, :today, :impediments, :help, :sparetime, :done, :saved
+  attr_reader :client, :endocode, :help, :done, :saved
+  
   def initialize(date, name)
     @date = date
     @name = name
@@ -9,25 +10,17 @@ class Report
   end
   
   def set_message(message)
-    if message.start_with? "1." or message.start_with? "Yesterday:"
+    if message.start_with? "1." or message.start_with? "Client:"
       message.slice! "1. "
-      @yesterday = message
+      @client = message
     end
-    if message.start_with? "2." or message.start_with? "Today:"
+    if message.start_with? "2." or message.start_with? "Endocode:"
       message.slice! "2. "
-      @today = message
+      @endocode = message
     end
-    if message.start_with? "3." or message.start_with? "Impediments:"
+    if message.start_with? "3." or message.start_with? "Help:"
       message.slice! "3. "
-      @impediments = message
-    end
-    if message.start_with? "4." or message.start_with? "Help:"
-      message.slice! "4. "
       @help = message
-    end
-    if message.start_with? "5." or message.start_with? "Sparetime:"
-      message.slice! "5. "
-      @sparetime = message
     end
   end
   
@@ -44,7 +37,7 @@ class Report
   end
   
   def set_done()
-    if self.yesterday.to_s.empty? or self.today.to_s.empty? or self.impediments.to_s.empty? or self.help.to_s.empty? or self.sparetime.to_s.empty?
+    if self.client.to_s.empty? or self.endocode.to_s.empty? or self.help.to_s.empty?
       @done = false
     else
       @done = true
@@ -54,11 +47,9 @@ class Report
   def write_to_file(file)
     File.open(file, 'a+') do |f|  
       f.puts "Report for #{self.date} from #{self.name}"
-      f.puts "Yesterday: #{self.yesterday}"
-      f.puts "Today: #{self.today}"
-      f.puts "Impediments: #{self.impediments}"
-      f.puts "Help needed: #{self.help}"
-      f.puts "Sparetime: #{self.sparetime}"
+      f.puts "For client: #{self.client}"
+      f.puts "For Endocode: #{self.endocode}"
+      f.puts "Impedements/Help needed: #{self.help}"
       f.puts ""
     end  
     @saved = true
@@ -66,11 +57,9 @@ class Report
 
   def print_report
     puts "Report for #{self.date} from #{self.name}"
-    puts "Yesterday: #{self.yesterday}"
-    puts "Today: #{self.today}"
-    puts "Impediments: #{self.impediments}"
-    puts "Help needed: #{self.help}"
-    puts "Sparetime: #{self.sparetime}"
+    puts "For client: #{self.client}"
+    puts "For Endocode: #{self.endocode}"
+    puts "Impediments/Help needed: #{self.help}"
   end
   
 end
