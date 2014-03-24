@@ -2,25 +2,24 @@ require 'rubygems'
 require 'xmpp4r'
 require 'xmpp4r/muc/helper/simplemucclient'
 require 'rufus-scheduler'
-require_relative'report'
+require_relative 'report'
 
 class EndoBot
   
   include Jabber
 
-  def initialize
+  def initialize(settings)
+    @jid = settings['jid']
+    @password = settings['password']
+    @channel = settings['channel']
+    @file = settings['file']
+    @users = settings['users'].split(",")
     @reports = []
   end
   
   def connect_bot
-    @jid = ARGV[0]
-    @password = ARGV[1]
-    @channel = ARGV[2]
-    @file = ARGV[3]
-    @users = ARGV[4].split(",")
-
     # Jabber::debug = true
-    @client = Jabber::Client.new(Jabber::JID.new(ARGV[0]))
+    @client = Jabber::Client.new(Jabber::JID.new(@jid))
     @client.allow_tls = false
     @client.connect
     @client.auth(@password)
@@ -71,7 +70,7 @@ class EndoBot
       print_line time, "- #{text}"
     }
 
-    @room.join(ARGV[2])
+    @room.join(@channel)
     
     setup_scheduler
 
@@ -198,16 +197,13 @@ class EndoBot
   def clear_reports
     @reports = []
   end
-end
 
-if ARGV[5] != "false"
-  ## Debug mode
-else
-  if ARGV.size != 6
-    puts "Usage: #{$0} <jid> <password> <room@conference/nick> <outputfile> <user1,user2,...> <debugflag>"
-    exit
-  else
-    @bot = EndoBot.new()
-    @bot.connect_bot
+  def self.ini_section
+    'endobot'
   end
+
+  def self.get_needed_keys
+    ['jid', 'password', 'channel', 'file', 'users']
+  end
+
 end

@@ -4,13 +4,20 @@ require 'spec_helper'
 describe EndoBot do
 
   before :each do
-      @bot = EndoBot.new()
+      @file = "logs/test_reports.log"
       @user = Faker::Internet.user_name
       @user2 = Faker::Internet.user_name
+      settings = {
+        'jid' => 'jid',
+        'password' => 'password',
+        'channel' => 'channel',
+        'file' => @file,
+        'users' => [@user, @user2].join(',')
+      }
+      @bot = EndoBot.new(settings)
       @today = Date.today
       @yesterday = Date.today.prev_day
       @message = "#{rand 1..3}. #{Faker::Lorem.sentence( rand 1..3 ).chomp '.'}"
-      @file = "logs/test_reports.log"
       @message1 = ("1. #{Faker::Lorem.sentence( rand 1..3 ).chomp '.'}")
       @message2 = ("2. #{Faker::Lorem.sentence( rand 1..3 ).chomp '.'}")
       @message3 = ("3. #{Faker::Lorem.sentence( rand 1..3 ).chomp '.'}")

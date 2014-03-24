@@ -1,0 +1,6 @@
+[endobot]
+jid = reportbot@example.com
+password = 1234
+channel = main_room@conference.example.com/reportbot
+file = /logs/reports.txt
+users = foo,bar,baz
