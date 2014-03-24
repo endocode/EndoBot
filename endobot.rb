@@ -1,97 +1,47 @@
 require 'rubygems'
-require 'xmpp4r'
-require 'xmpp4r/muc/helper/simplemucclient'
-require 'rufus-scheduler'
 require_relative 'report'
+require_relative 'botbase'
 
-class EndoBot
-  
-  include Jabber
+class EndoBot < BotBase
 
   def initialize(settings)
-    @jid = settings['jid']
-    @password = settings['password']
-    @channel = settings['channel']
+    super(settings)
     @file = settings['file']
     @users = settings['users'].split(",")
     @reports = []
   end
-  
-  def connect_bot
-    # Jabber::debug = true
-    @client = Jabber::Client.new(Jabber::JID.new(@jid))
-    @client.allow_tls = false
-    @client.connect
-    @client.auth(@password)
-    @client.send(Presence.new.set_type(:available))
 
-    mainthread = Thread.current
+  def handle_message(time, nick, text)
+    handled = false
 
-    @room = Jabber::MUC::SimpleMUCClient.new(@client)
-
-    # SimpleMUCClient callback-blocks
-
-    @room.on_join { |time,nick|
-      puts "#{nick} has joined!"
-      puts "Users: " + @room.roster.keys.join(', ')
-      # @users << nick
-    }
-
-    @room.on_leave { |time,nick|
-      puts "#{nick} has left!"
-      # @users.delete(nick)
-    }
-
-    @room.on_message { |time,nick,text|
-      puts "#{Date.today}, #{nick}, #{text}"
-      if (create_reports(Date.today, nick, text, @file)) == true
-        @room.say("Thanks #{nick} - Your report is saved")
-        bot_reports_only_missing
+    if (create_reports(Date.today, nick, text, @file)) == true
+      send_message_to_room("Thanks #{nick} - Your report is saved")
+      bot_reports_only_missing
+      handled = true
+    elsif text.strip =~ /^(.+?): reports$/
+      if $1.downcase == bot_nick.downcase
+        bot_reports
+        handled = true
       end
+    end
 
-      # Bot: exit please
-      if text.strip =~ /^(.+?): exit please$/
-        if $1.downcase == @room.jid.resource.downcase
-          puts "exiting"
-          @room.exit "Exiting on behalf of #{nick}"
-          mainthread.wakeup
-        end
-      end
-
-      # Bot: reports
-      if text.strip =~ /^(.+?): reports$/
-        if $1.downcase == @room.jid.resource.downcase
-          bot_reports
-        end
-      end
-    }
-
-    @room.on_room_message { |time,text|
-      print_line time, "- #{text}"
-    }
-
-    @room.join(@channel)
-    
-    setup_scheduler
-
-    Thread.stop
-    @client.close  
+    unless handled
+      super(time, nick, text)
+    end
   end
 
-  def setup_scheduler
-    scheduler = Rufus::Scheduler.new
+  def setup_scheduler(scheduler)
     scheduler.cron '0 12 * * 1-5' do
       send_messages_to_all
     end
     scheduler.cron '0 22 * * *' do
       clear_reports
     end
-    scheduler.join
   end
 
   def bot_reports
     if get_users_reports(Date.today).empty?
-      @room.say("no Reports yet :(")
+      send_message_to_room("no Reports yet :(")
     else
       saved_reports = "Reports saved: #{get_users_reports(Date.today)}"
       counter = 0
@@ -102,16 +52,16 @@ class EndoBot
         end
       end
       if counter > 0
-        @room.say("#{saved_reports}\nReports missing: #{missing_reports}")
+        send_message_to_room("#{saved_reports}\nReports missing: #{missing_reports}")
       else
-        @room.say("Everybody entered a report - thanks!")
+        send_message_to_room("Everybody entered a report - thanks!")
       end
     end
   end
 
   def bot_reports_only_missing
     if get_users_reports(Date.today).empty?
-      @room.say("no Reports yet :(")
+      send_message_to_room("no Reports yet :(")
     else
       counter = 0
       for current in @users
@@ -121,9 +71,9 @@ class EndoBot
         end
       end
       if counter > 0
-        @room.say("Reports missing: #{missing_reports}")
+        send_message_to_room("Reports missing: #{missing_reports}")
       else
-        @room.say("Everybody entered a report - thanks!")
+        send_message_to_room("Everybody entered a report - thanks!")
       end
     end
   end
@@ -131,7 +81,7 @@ class EndoBot
   def send_messages_to_all
     for current in @users
       if user_has_report?(current) == false
-        @client.send Message::new("#{current}@#{Jabber::JID.new(ARGV[0]).domain}","Please submit your daily report.").set_type(:chat).set_id('1')
+        send_message_to_user("Please submit your daily report.", current)
       end
     end
   end
@@ -203,7 +153,7 @@ class EndoBot
   end
 
   def self.get_needed_keys
-    ['jid', 'password', 'channel', 'file', 'users']
+    self.superclass.get_needed_keys + ['file', 'users']
   end
 
 end
