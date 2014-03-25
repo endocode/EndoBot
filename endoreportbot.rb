@@ -2,7 +2,7 @@ require 'rubygems'
 require_relative 'report'
 require_relative 'botbase'
 
-class EndoBot < BotBase
+class EndoReportBot < BotBase
 
   def initialize(settings)
     super(settings)
@@ -149,7 +149,7 @@ class EndoBot < BotBase
   end
 
   def self.ini_section
-    'endobot'
+    'endoreportbot'
   end
 
   def self.get_needed_keys

@@ -1,4 +1,4 @@
-require_relative 'endobot'
+require_relative 'endoreportbot'
 require_relative 'botconfig'
 
 ini = 'endobotconfig.ini'
@@ -13,7 +13,7 @@ begin
   bot_threads = []
   config = BotConfig.new(ini)
 
-  [EndoBot].each do |bot_class|
+  [EndoReportBot].each do |bot_class|
     settings = config.get_valid_section(bot_class)
     if settings != nil
       puts "Running #{bot_class.to_s} instance."

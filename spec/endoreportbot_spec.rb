@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-
-describe EndoBot do
+describe EndoReportBot do
 
   before :each do
       @file = "logs/test_reports.log"
@@ -14,7 +13,7 @@ describe EndoBot do
         'file' => @file,
         'users' => [@user, @user2].join(',')
       }
-      @bot = EndoBot.new(settings)
+      @bot = EndoReportBot.new(settings)
       @today = Date.today
       @yesterday = Date.today.prev_day
       @message = "#{rand 1..3}. #{Faker::Lorem.sentence( rand 1..3 ).chomp '.'}"
