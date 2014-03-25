@@ -1,5 +1,6 @@
 *.gem
 *.rbc
+*~
 .bundle
 .config
 coverage
@@ -19,3 +20,5 @@ doc/
 
 start_bot.sh
 mail_reports.sh
+
+endobotconfig.ini
