@@ -4,3 +4,10 @@ password = 1234
 channel = main_room@conference.example.com/reportbot
 file = /logs/reports.txt
 users = foo,bar,baz
+
+[endochilibot]
+jid = chilibot@example.com
+password = 4321
+channel = main_room@conference.example/com/chilibot
+feed = https://www.example.com/chili/activities.atom
+key = 0123456789abcdef0123456789abcdef01234567
