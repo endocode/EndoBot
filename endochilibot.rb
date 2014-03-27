@@ -82,7 +82,7 @@ class EndoChiliBot < BotBase
                   }
                  ]
     data = []
-    now = DateTime.new(1970, 1, 1)
+    now = DateTime.now
     data_stubs.map do |stub|
       uri = URI.parse(feed)
       uri.query = URI.encode_www_form({key: key, set_filter: 1}.merge(stub[:q]))
