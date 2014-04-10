@@ -67,19 +67,28 @@ class BotBase
 
   def handle_message(time, nick, text)
     # To be overridden by subclass.
-    # Bot: exit please
     handled = false
+    bot_query = bot_nick + ': '
+    stripped_msg = text.strip
 
-    if text.strip =~ /^(.+?): exit please$/
-      if $1.downcase == bot_nick.downcase
-        puts "exiting"
-        @room.exit "Exiting on behalf of #{nick}"
-        @scheduler.shutdown
-        puts "scheduler shutted down"
-        handled = true
-      end
+    if stripped_msg.start_with?(bot_query)
+      message = stripped_msg.gsub(/^#{Regexp.escape(bot_query)}/, '')
+      handled = handle_direct_message(time, nick, message)
     end
 
+    handled
+  end
+
+  def handle_direct_message(time, nick, message)
+    # To be overridden by subclass.
+    handled = false
+    if message == 'exit please'
+      puts "exiting"
+      @room.exit "Exiting on behalf of #{nick}"
+      @scheduler.shutdown
+      puts "scheduler shutted down"
+      handled = true
+    end
     handled
   end
 

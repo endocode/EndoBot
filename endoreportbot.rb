@@ -18,16 +18,25 @@ class EndoReportBot < BotBase
       send_message_to_room("Thanks #{nick} - Your report is saved")
       bot_reports_only_missing
       handled = true
-    elsif text.strip =~ /^(.+?): reports$/
-      if $1.downcase == bot_nick.downcase
-        bot_reports
-        handled = true
-      end
     end
 
     unless handled
-      super(time, nick, text)
+      handled = super(time, nick, text)
     end
+    handled
+  end
+
+  def handle_direct_message(time, nick, message)
+    handled = false
+    if message == 'reports'
+      bot_reports
+      handled = true
+    end
+
+    unless handled
+      handled = super(time, nick, message)
+    end
+    handled
   end
 
   def setup_scheduler(scheduler)
