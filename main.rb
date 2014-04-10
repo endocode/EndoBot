@@ -19,6 +19,7 @@ begin
     if settings != nil
       puts "Running #{bot_class.to_s} instance."
       bot_instance = bot_class.new(settings)
+      bot_instance.set_user_mappings(config.get_user_mappings)
       bot_threads << Thread.new { bot_instance.run }
     else
       puts "Not running #{bot_class.to_s} instance - no valid configuration."

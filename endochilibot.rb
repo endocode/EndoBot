@@ -124,7 +124,7 @@ class EndoChiliBot < BotBase
     data_items.each do |data_item|
       item = data_item[:i]
       data = data_item[:d]
-      author = item.author.email.content.gsub('@endocode.com', '')
+      author = self.get_nick_for_user(item.author.email.content.gsub('@endocode.com', ''))
       title = item.title.content
       message = data.get_message(author, title)
       unless message.empty?

@@ -13,6 +13,18 @@ class BotBase
     @channel = settings['channel']
   end
 
+  def set_user_mappings(user_mappings)
+    @user_mappings = user_mappings
+  end
+
+  def get_nick_for_user(user)
+    nick = user
+    if @user_mappings.has_key?(user)
+      nick = @user_mappings[user]
+    end
+    nick
+  end
+
   def run
     # Jabber::debug = true
     @client = Jabber::Client.new(@jid)

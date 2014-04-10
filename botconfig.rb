@@ -26,4 +26,12 @@ class BotConfig
     valid_section
   end
 
+  def get_user_mappings
+    user_mappings = {}
+    if @ini_file.has_section?('user-mappings')
+      user_mappings = @ini_file['user-mappings']
+    end
+    user_mappings
+  end
+
 end

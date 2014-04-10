@@ -46,8 +46,9 @@ class EndoReportBot < BotBase
       saved_reports = "Reports saved: #{get_users_reports(Date.today)}"
       counter = 0
       for current in @users
-        if user_has_report?(current) == false
-          missing_reports = "#{missing_reports}#{current} "
+        nick = self.get_nick_for_user(current)
+        if user_has_report?(nick) == false
+          missing_reports = "#{missing_reports}#{nick} "
           counter = counter + 1
         end
       end
@@ -65,8 +66,9 @@ class EndoReportBot < BotBase
     else
       counter = 0
       for current in @users
-        if user_has_report?(current) == false
-          missing_reports = "#{missing_reports}#{current} "
+        nick = self.get_nick_for_user(current)
+        if user_has_report?(nick) == false
+          missing_reports = "#{missing_reports}#{nick} "
           counter = counter + 1
         end
       end
@@ -80,7 +82,8 @@ class EndoReportBot < BotBase
 
   def send_messages_to_all
     for current in @users
-      if user_has_report?(current) == false
+      nick = self.get_nick_for_user(current)
+      if user_has_report?(nick) == false
         send_message_to_user("Please submit your daily report.", current)
       end
     end

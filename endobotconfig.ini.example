@@ -1,3 +1,8 @@
+[user-mappings]
+node_part_of_jid = resource_part_of_channel
+# for jid: gallus_anonymus@example.com and nick on channel: anonymous
+gallus_anonymus = anonymous
+
 [endoreportbot]
 jid = reportbot@example.com
 password = 1234
