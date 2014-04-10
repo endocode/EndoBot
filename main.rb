@@ -33,8 +33,9 @@ begin
     puts 'Waiting for bots to quit'
     bot_threads.each { |thread| thread.join }
   end
-rescue StandardError => ex
+rescue => ex
   puts "Error: #{ex}"
+  puts ex.backtrace
   status = 1
 end
 
