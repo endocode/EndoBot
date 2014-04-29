@@ -10,6 +10,9 @@ class Report
   end
   
   def set_message(message)
+    # Remove any trailing whitespace from user's message
+    message.strip!
+
     if message.start_with? "1." or message.start_with? "Client:"
       message.slice! "1. "
       @client = message
