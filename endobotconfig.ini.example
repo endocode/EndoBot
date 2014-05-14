@@ -1,3 +1,13 @@
+[common]
+socket_path = /tmp/endobot.sock
+pid_dir = /var/run/endobot
+log_path = /logs/daemon_log
+# DEBUG, INFO, WARN, ERROR
+# choosing DEBUG will pring all
+# choosing WARN will print only WARN and ERROR
+# default is INFO
+log_level = INFO
+
 [user-mappings]
 node_part_of_jid = resource_part_of_channel
 # for jid: gallus_anonymus@example.com and nick on channel: anonymous

@@ -2,7 +2,7 @@
 
 [![Build Status](https://api.travis-ci.org/endocode/EndoBot.png)](http://travis-ci.org/endocode/EndoBot)
 
-The Endobot project consists of two simple jabber clients written in
+The Endobot daemon consists of two simple jabber clients written in
 Ruby - EndoReportBot and EndoChiliBot.
 
 ## EndoReportBot
@@ -23,8 +23,8 @@ given feed every 5 minutes and prints changes to specified channel.
 ## Setup
 
 See the endobotconfig.ini.example file, rename it to endobotconfig.ini
-and run main.rb.  Alternatively, you can pass a path to ini file as a
-first parameter.
+and run "ruby main.rb start ./endobotconfig.ini".  Run "ruby main.rb
+help" to know more.
 
 If you want to run only one bot, say EndoReportBot, then just comment
-out the section for EndoChiliBot.
+out the section for EndoChiliBot in configuration file.
