@@ -1,25 +1,52 @@
 require 'spec_helper'
+require_relative '../botlog'
 
 describe EndoReportBot do
 
-  before :each do
-      @file = "logs/test_reports.log"
-      @user = Faker::Internet.user_name
-      @user2 = Faker::Internet.user_name
-      settings = {
+  class FakeConfig
+
+    def initialize(file, users)
+      @file = file
+      @users = users
+    end
+
+    def has_section?(name)
+      name == 'endoreportbot'
+    end
+
+    def get_section(name)
+      has_section?(name) ? {
         'jid' => 'jid',
         'password' => 'password',
         'channel' => 'channel',
         'file' => @file,
-        'users' => [@user, @user2].join(',')
-      }
-      @bot = EndoReportBot.new(settings)
-      @today = Date.today
-      @yesterday = Date.today.prev_day
-      @message = "#{rand 1..3}. #{Faker::Lorem.sentence( rand 1..3 ).chomp '.'}"
-      @message1 = ("1. #{Faker::Lorem.sentence( rand 1..3 ).chomp '.'}")
-      @message2 = ("2. #{Faker::Lorem.sentence( rand 1..3 ).chomp '.'}")
-      @message3 = ("3. #{Faker::Lorem.sentence( rand 1..3 ).chomp '.'}")
+        'users' => @users.join(',')
+      } : nil
+    end
+
+    def get_user_mappings
+      {}
+    end
+
+  end
+
+  before :each do
+    @file = "logs/test_reports.log"
+    log_file = "logs/test_log.log"
+    @user = Faker::Internet.user_name
+    @user2 = Faker::Internet.user_name
+    config = FakeConfig.new(@file, [@user, @user2])
+    log = BotLog.new(log_file, :DEBUG)
+    @bot = EndoReportBot.new
+    expect(@bot.can_use_config(config)[0]).to be_true
+    @bot.config = config
+    @bot.log = log
+    @today = Date.today
+    @yesterday = Date.today.prev_day
+    @message = "#{rand 1..3}. #{Faker::Lorem.sentence( rand 1..3 ).chomp '.'}"
+    @message1 = ("1. #{Faker::Lorem.sentence( rand 1..3 ).chomp '.'}")
+    @message2 = ("2. #{Faker::Lorem.sentence( rand 1..3 ).chomp '.'}")
+    @message3 = ("3. #{Faker::Lorem.sentence( rand 1..3 ).chomp '.'}")
   end
 
   describe "#create_reports" do

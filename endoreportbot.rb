@@ -1,14 +1,11 @@
-require 'rubygems'
 require_relative 'report'
 require_relative 'botbase'
 
 class EndoReportBot < BotBase
 
-  def initialize(settings)
-    super(settings)
-    @file = settings['file']
-    @users = settings['users'].split(",")
-    @reports = []
+  def initialize
+    super
+    clear_reports
   end
 
   def handle_message(time, nick, text)
@@ -21,7 +18,7 @@ class EndoReportBot < BotBase
     end
 
     unless handled
-      handled = super(time, nick, text)
+      handled = super
     end
     handled
   end
@@ -34,12 +31,13 @@ class EndoReportBot < BotBase
     end
 
     unless handled
-      handled = super(time, nick, message)
+      handled = super
     end
     handled
   end
 
   def setup_scheduler(scheduler)
+    super
     scheduler.cron '0 12 * * 1-5' do
       send_messages_to_all
     end
@@ -160,12 +158,18 @@ class EndoReportBot < BotBase
     @reports = []
   end
 
-  def self.ini_section
+  def section_name
     'endoreportbot'
   end
 
-  def self.get_needed_keys
-    self.superclass.get_needed_keys + ['file', 'users']
+  def get_needed_keys
+    super + ['file', 'users']
+  end
+
+  def apply_settings(settings)
+    super
+    @file = File.expand_path(settings['file'])
+    @users = settings['users'].split(",")
   end
 
 end
