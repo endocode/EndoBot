@@ -19,9 +19,9 @@ class EndoChiliBot < BotBase
       @regexp = regexp
     end
 
-    def get_message(author, title)
+    def get_message(author, title, id)
       if title =~ @regexp
-        "#{author} #{template} (#{$1} - #{$2})"
+        "#{author} #{template} (#{$1} - #{$2}) - #{id}"
       else
         "!@!@!@!@! #{author} (#{title}) !@!@!@!@!"
       end
@@ -63,7 +63,8 @@ class EndoChiliBot < BotBase
       data = data_item[:d]
       author = get_nick_for_user(item.author.email.content.gsub('@endocode.com', ''))
       title = item.title.content
-      message = data.get_message(author, title)
+      id = item.id.content
+      message = data.get_message(author, title, id)
       unless message.empty?
         messages << message
       end
