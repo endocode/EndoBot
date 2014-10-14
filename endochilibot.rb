@@ -115,11 +115,11 @@ class EndoChiliBot < BotBase
 #                    t: ' ??? ',
 #                    r: /\?\?\?/
 #                  },
-#                  {
-#                    q: {show_news: 1},
-#                    t: ' ??? ',
-#                    r: /\?\?\?/
-#                  },
+                  {
+                    q: {show_news: 1},
+                    t: ' posted news ',
+                    r: /(.*) - (.*)/
+                  },
                   {
                     q: {show_time_entries: 1},
                     t: 'added a time entry',
