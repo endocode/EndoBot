@@ -69,8 +69,10 @@ class EndoChiliBot < BotBase
         messages << message
       end
     end
-    message_to_send = messages.join("\n")
-    send_message_to_room(message_to_send)
+    if !messages.empty?
+      message_to_send = messages.join("\n")
+      send_message_to_room(message_to_send)
+    end
   end
 
   def section_name
